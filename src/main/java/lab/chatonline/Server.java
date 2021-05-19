@@ -10,7 +10,24 @@ import java.io.*;
 public class Server {
   public static void main(String[] args) {
     System.out.println("Starting server...");
-
+    try (
+      ServerSocket server = new ServerSocket(ServerInfo.port);
+      Socket connection = server.accept();
+      PrintWriter out = new PrintWriter(connection.getOutputStream(), true);
+      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+    ){
+      System.out.println("New client at " + connection);
+      String msg = "";
+      while(!msg.equals("\\quit")) {
+        msg = in.readLine();
+        if(msg == null) {
+          break;
+        }
+        out.println(msg);
+      }
+    } catch (IOException ex) {
+      System.err.println(ex);
+    }
     System.out.println("Server shutted down.");
   }
 }

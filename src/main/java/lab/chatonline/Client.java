@@ -14,5 +14,24 @@ import java.util.Scanner;
 public class Client {
   public static void main(String[] args) {
     System.out.println("Connecting to server " + ServerInfo.info());
+    try (
+      Socket connection = new Socket(ServerInfo.ip, ServerInfo.port);
+      PrintWriter out = new PrintWriter(connection.getOutputStream(), true);
+      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+    ){
+      System.out.println("Connection succeeds. Enter \"\\quit\" to exit.");
+      Scanner sc = new Scanner(System.in);
+      String msg = "";
+      while(!msg.equals("\\quit")) {
+        System.out.print("> ");
+        msg = sc.nextLine();
+        out.println(msg);
+        String echo = in.readLine();
+        System.out.println("> " + echo);
+      }
+    }
+    catch (IOException ex) {
+      System.err.println(ex);
+    }
   }
 }
