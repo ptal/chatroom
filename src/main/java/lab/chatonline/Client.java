@@ -29,8 +29,7 @@ public class Client {
         String echo = in.readLine();
         System.out.println("> " + echo);
       }
-    }
-    catch (IOException ex) {
+    } catch (IOException ex) {
       System.err.println(ex);
     }
   }

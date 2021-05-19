@@ -3,27 +3,19 @@ package lab.chatroom;
 import java.net.*;
 import java.io.*;
 
-/* This server can only accepts one client. The server is stopped
-*  when this client timed out or if it sends the message "\quit".
+/* This server accept more than one client.
+   However, each client is isolated.
 */
 
 public class Server {
   public static void main(String[] args) {
     System.out.println("Starting server...");
-    try (
-      ServerSocket server = new ServerSocket(ServerInfo.port);
-      Socket connection = server.accept();
-      PrintWriter out = new PrintWriter(connection.getOutputStream(), true);
-      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))
-    ){
-      System.out.println("New client at " + connection);
-      String msg = "";
-      while(!msg.equals("\\quit")) {
-        msg = in.readLine();
-        if(msg == null) {
-          break;
-        }
-        out.println(msg);
+    try (ServerSocket server = new ServerSocket(ServerInfo.port))
+    {
+      while(true) {
+        Socket socket = server.accept();
+        System.out.println("New client at " + socket);
+        new Connection(socket).start();
       }
     } catch (IOException ex) {
       System.err.println(ex);
