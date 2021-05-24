@@ -49,6 +49,7 @@ public class Server implements Runnable {
   }
 
   public synchronized void broadcastMsg(String msg) {
+    System.out.println("Broadcast message: " + msg);
     for(Connection c : room) {
       c.send(msg);
     }

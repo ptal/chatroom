@@ -51,6 +51,7 @@ public class Connection extends Thread {
 
   // Returns true if it was the last message of the client.
   public boolean parseMessage(String msg) {
+    System.out.println("Received message from client: " + msg);
     if(msg == null) {
       return true;
     }
