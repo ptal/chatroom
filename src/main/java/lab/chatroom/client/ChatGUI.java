@@ -11,21 +11,54 @@ import javafx.scene.control.*;
 public class ChatGUI extends Application
 {
   public static void main(String[] args) {
-    launch(args);
+    ChatGUI.launch(args);
   }
 
-  // Based on https://docs.oracle.com/javafx/2/get_started/hello_world.htm
+  private Text chatText;
+  private ScrollPane chatScroll;
+
   @Override
   public void start(Stage stage) {
-    stage.setTitle("Hello World!");
-    Button btn = new Button();
-    btn.setText("Say 'Hello World'");
-    btn.setOnAction((event) -> {
-      System.out.println("Hello World!");
-    });
-    StackPane root = new StackPane();
-    root.getChildren().add(btn);
-    stage.setScene(new Scene(root, 300, 250));
+    createGUI(stage);
     stage.show();
+  }
+
+  private void createGUI(Stage stage) {
+    Parent chatapp = createChatView();
+    Scene scene = new Scene(chatapp, 400, 300);
+    stage.setTitle("Discord Remixed!");
+    stage.setScene(scene);
+  }
+
+  private Parent createChatView() {
+    VBox chatapp = new VBox();
+    addChat(chatapp);
+    addChatInput(chatapp);
+    return chatapp;
+  }
+
+  private void addChat(Pane parent) {
+    chatText = new Text();
+    chatScroll = new ScrollPane();
+    chatScroll.setContent(chatText);
+    parent.getChildren().add(chatScroll);
+  }
+
+  private void refreshChat(String newMsg) {
+    chatText.setText(chatText.getText() + newMsg);
+    chatScroll.setVvalue(1.0);
+  }
+
+  private void addChatInput(Pane parent) {
+    HBox chatInput = new HBox();
+    TextField messageInput = new TextField();
+    Button sendButton = new Button();
+    sendButton.setText("send");
+    sendButton.setOnAction((event) -> {
+      refreshChat(messageInput.getText() + "\n");
+      messageInput.setText("");
+    });
+    chatInput.getChildren().addAll(messageInput, sendButton);
+    parent.getChildren().add(chatInput);
   }
 }
